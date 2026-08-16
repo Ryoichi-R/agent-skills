@@ -1,0 +1,26 @@
+{
+    "name": "research-skills",
+    "version": "0.2.0",
+    "description": "Local and web research skills with structured deep-dive analysis.",
+    "skills": "./skills/",
+    "author": {
+        "name": "Ryoichi-R",
+        "url": "https://github.com/Ryoichi-R/agent-skills/issues"
+    },
+    "homepage": "https://github.com/Ryoichi-R/agent-skills/tree/main/plugins/research-skills",
+    "repository": "https://github.com/Ryoichi-R/agent-skills",
+    "license": "MIT",
+    "interface": {
+        "displayName": "research-skills",
+        "shortDescription": "Local and web research with structured deep-dive follow-up.",
+        "longDescription": "Combines local document search with web research to produce a cited report, then optionally runs a deep-dive pass that adds case studies, data, and concrete examples for each claim.",
+        "developerName": "Ryoichi-R",
+        "category": "Research",
+        "capabilities": ["Read", "Write", "Network", "Interactive"],
+        "defaultPrompt": [
+            "Research this topic using local files and the web.",
+            "Deep-dive the claims in my last research report.",
+            "Find case studies and data backing this finding."
+        ]
+    }
+}

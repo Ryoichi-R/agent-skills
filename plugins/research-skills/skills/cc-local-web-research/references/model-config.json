@@ -1,0 +1,25 @@
+{
+    "models": [
+        {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6",
+            "provider": "anthropic"
+        },
+        {
+            "id": "claude-sonnet-4-6",
+            "name": "Claude Sonnet 4.6",
+            "provider": "anthropic"
+        },
+        {
+            "id": "claude-haiku-4-5-20251001",
+            "name": "Claude Haiku 4.5",
+            "provider": "anthropic"
+        }
+    ],
+    "default_model": "claude-sonnet-4-6",
+    "schema_versions_accepted": ["1.0", "1.1"],
+    "current_phase": 2,
+    "current_phase_note": "DEPRECATED: phase-state.json が正本。このフィールドは Get-CurrentPhase の初期シード値としてのみ使用される",
+    "phase_started_at": "2026-02-11T00:00:00Z",
+    "compatibility_version": "1.0"
+}

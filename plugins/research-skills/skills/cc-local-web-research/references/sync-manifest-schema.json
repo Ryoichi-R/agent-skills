@@ -1,0 +1,89 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "sync-manifest.json スキーマ",
+    "description": "cc-local-web-research スキルの同期マニフェスト。v1.0/v1.1 を oneOf + schema_version const で選択する。",
+    "oneOf": [{ "$ref": "#/$defs/v1_0" }, { "$ref": "#/$defs/v1_1" }],
+    "$defs": {
+        "file_entry": {
+            "type": "object",
+            "required": ["source", "dest", "sha256"],
+            "properties": {
+                "source": { "type": "string" },
+                "dest": { "type": "string" },
+                "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+            },
+            "additionalProperties": false
+        },
+        "source_file_commit": {
+            "type": "object",
+            "required": ["source", "commit_sha"],
+            "properties": {
+                "source": { "type": "string" },
+                "commit_sha": { "type": "string", "pattern": "^[a-f0-9]{40}$" }
+            },
+            "additionalProperties": false
+        },
+        "cc_only_file_entry": {
+            "type": "object",
+            "required": ["path", "sha256"],
+            "properties": {
+                "path": { "type": "string" },
+                "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+            },
+            "additionalProperties": false
+        },
+        "v1_0": {
+            "type": "object",
+            "required": [
+                "schema_version",
+                "generated_at",
+                "source_file_commits",
+                "files"
+            ],
+            "properties": {
+                "schema_version": { "const": "1.0" },
+                "generated_at": { "type": "string", "format": "date-time" },
+                "source_file_commits": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/source_file_commit" }
+                },
+                "files": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/file_entry" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "v1_1": {
+            "type": "object",
+            "required": [
+                "schema_version",
+                "generated_at",
+                "source_file_commits",
+                "files",
+                "cc_only_files"
+            ],
+            "properties": {
+                "schema_version": { "const": "1.1" },
+                "generated_at": { "type": "string", "format": "date-time" },
+                "source_file_commits": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/source_file_commit" }
+                },
+                "files": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/file_entry" }
+                },
+                "cc_only_files": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/cc_only_file_entry" }
+                },
+                "note": {
+                    "type": "string",
+                    "description": "同期マニフェストに関する運用上の注記"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

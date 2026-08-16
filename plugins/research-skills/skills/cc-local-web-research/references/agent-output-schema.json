@@ -1,0 +1,119 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "cc-local-web-research-agent-output-v1",
+    "title": "cc-local-web-research サブエージェント出力スキーマ",
+    "description": "local-searcher, web-searcher, deep-drill-searcher の出力を定義する共通スキーマ。agent_type で discriminate する。",
+    "oneOf": [
+        { "$ref": "#/$defs/local_result" },
+        { "$ref": "#/$defs/web_result" },
+        { "$ref": "#/$defs/deep_drill_result" }
+    ],
+    "$defs": {
+        "Match": {
+            "type": "object",
+            "properties": {
+                "path": { "type": "string" },
+                "score": { "type": "number" },
+                "snippet": { "type": "string" },
+                "snippetStartLine": { "type": "integer", "minimum": 1 },
+                "snippetEndLine": { "type": "integer", "minimum": 1 },
+                "modifiedAt": { "type": "string", "format": "date-time" }
+            },
+            "required": [
+                "path",
+                "score",
+                "snippet",
+                "snippetStartLine",
+                "snippetEndLine",
+                "modifiedAt"
+            ],
+            "additionalProperties": false
+        },
+        "WebEntry": {
+            "type": "object",
+            "properties": {
+                "title": { "type": "string" },
+                "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "pattern": "^https://"
+                },
+                "snippet": { "type": "string" },
+                "fetched_at": { "type": "string", "format": "date-time" },
+                "status": { "type": "string", "enum": ["ok", "fetch_failed"] }
+            },
+            "required": ["title", "url", "snippet", "fetched_at", "status"],
+            "additionalProperties": false
+        },
+        "local_result": {
+            "type": "object",
+            "properties": {
+                "agent_type": { "type": "string", "const": "local" },
+                "status": {
+                    "type": "string",
+                    "enum": ["ok", "empty", "error"]
+                },
+                "matches": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/Match" }
+                },
+                "scanned_file_count": { "type": "integer", "minimum": 0 },
+                "sourceRoot": { "type": "string" },
+                "message": { "type": "string" },
+                "error_message": { "type": "string" }
+            },
+            "required": [
+                "agent_type",
+                "status",
+                "matches",
+                "scanned_file_count"
+            ],
+            "additionalProperties": false
+        },
+        "web_result": {
+            "type": "object",
+            "properties": {
+                "agent_type": { "type": "string", "const": "web" },
+                "status": {
+                    "type": "string",
+                    "enum": ["ok", "partial", "empty", "error"]
+                },
+                "results": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/WebEntry" }
+                },
+                "error_message": { "type": "string" }
+            },
+            "required": ["agent_type", "status", "results"],
+            "additionalProperties": false
+        },
+        "deep_drill_result": {
+            "type": "object",
+            "properties": {
+                "agent_type": { "type": "string", "const": "deep_local" },
+                "status": {
+                    "type": "string",
+                    "enum": ["ok", "empty", "error"]
+                },
+                "drill_keywords": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "matches": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/Match" }
+                },
+                "scanned_file_count": { "type": "integer", "minimum": 0 },
+                "error_message": { "type": "string" }
+            },
+            "required": [
+                "agent_type",
+                "status",
+                "drill_keywords",
+                "matches",
+                "scanned_file_count"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

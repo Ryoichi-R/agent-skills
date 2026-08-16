@@ -34,8 +34,7 @@ Support contact: https://github.com/Ryoichi-R/agent-skills/issues
 
 ## Security
 
-Security contact: https://github.com/Ryoichi-R/agent-skills/issues
-This candidate has not been published. Formal secret and history audit requires separate consent.
+Report vulnerabilities privately through GitHub Security Advisories, not as public issues. See SECURITY.md.
 
 ## License
 

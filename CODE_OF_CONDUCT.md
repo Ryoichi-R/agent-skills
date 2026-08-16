@@ -12,6 +12,6 @@ This policy applies to repository discussions, contributions, reviews, and other
 
 ## Enforcement
 
-Project maintainers may edit, reject, or remove contributions and restrict participation when necessary. Reports will be handled as privately as practical.
+Project maintainers may edit, reject, or remove contributions and restrict participation when necessary. Reports will be handled as discreetly as the reporting channel allows.
 
-For conduct reports or general contact, use https://github.com/Ryoichi-R/agent-skills/issues. Security vulnerabilities must follow SECURITY.md.
+For general contact, use https://github.com/Ryoichi-R/agent-skills/issues. Issues are publicly visible, so do not include private or identifying details about anyone in a conduct report filed there; describe only what is necessary and maintainers will follow up. Security vulnerabilities must follow SECURITY.md and must not be filed as issues.

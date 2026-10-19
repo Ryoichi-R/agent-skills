@@ -1,0 +1,31 @@
+{
+    "API": ["インターフェース", "endpoint", "エンドポイント"],
+    "認証": ["authentication", "auth", "ログイン", "login"],
+    "設定": ["configuration", "config", "コンフィグ"],
+    "エラー": ["error", "例外", "exception", "障害"],
+    "テスト": ["test", "testing", "検証", "テスティング"],
+    "デプロイ": ["deploy", "deployment", "デプロイメント", "公開"],
+    "データベース": ["database", "DB", "データベース"],
+    "キャッシュ": ["cache", "caching", "キャッシング"],
+    "セキュリティ": ["security", "セキュリティ", "安全性"],
+    "パフォーマンス": ["performance", "性能", "パフォーマンス"],
+    "ログ": ["log", "logging", "ロギング", "記録"],
+    "監視": ["monitoring", "monitor", "モニタリング"],
+    "自動化": ["automation", "automate", "オートメーション"],
+    "CI/CD": [
+        "continuous integration",
+        "継続的インテグレーション",
+        "パイプライン",
+        "pipeline"
+    ],
+    "コンテナ": ["container", "docker", "コンテナ"],
+    "マイクロサービス": ["microservice", "microservices", "マイクロサービス"],
+    "暗号化": ["encryption", "encrypt", "暗号"],
+    "バックアップ": ["backup", "バックアップ", "退避"],
+    "リファクタリング": ["refactoring", "refactor", "リファクタ"],
+    "依存関係": ["dependency", "dependencies", "依存"],
+    "環境変数": ["environment variable", "env var", "環境変数"],
+    "スクリプト": ["script", "scripting", "スクリプティング"],
+    "権限": ["permission", "permissions", "アクセス権"],
+    "インデックス": ["index", "indexing", "索引"]
+}

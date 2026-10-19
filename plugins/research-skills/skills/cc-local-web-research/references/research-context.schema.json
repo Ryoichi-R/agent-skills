@@ -1,0 +1,81 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Research context sidecar",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schema_version",
+        "run_id",
+        "report_path",
+        "report_sha256",
+        "original_query",
+        "source_root",
+        "created_at",
+        "local_search_status",
+        "web_search_status"
+    ],
+    "properties": {
+        "schema_version": {
+            "const": "1.0"
+        },
+        "run_id": {
+            "type": "string",
+            "minLength": 1
+        },
+        "report_path": {
+            "type": "string",
+            "minLength": 1
+        },
+        "report_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{64}$"
+        },
+        "original_query": {
+            "type": "string",
+            "minLength": 1
+        },
+        "source_root": {
+            "type": ["string", "null"]
+        },
+        "created_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "local_search_status": {
+            "enum": ["success", "partial", "failed", "not_run", "unknown"]
+        },
+        "web_search_status": {
+            "enum": ["success", "partial", "failed", "not_run", "unknown"]
+        },
+        "search_terms": {
+            "type": "object"
+        },
+        "excluded_conditions": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "known_limitations": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "report_type": {
+            "enum": ["research", "deepdive"]
+        },
+        "state_path": {
+            "type": "string",
+            "minLength": 1
+        },
+        "parent_report_path": {
+            "type": "string",
+            "minLength": 1
+        },
+        "parent_report_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+        }
+    }
+}

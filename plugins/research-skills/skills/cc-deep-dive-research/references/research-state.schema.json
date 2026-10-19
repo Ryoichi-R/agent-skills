@@ -1,0 +1,626 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Deep Dive state 1.1",
+    "$defs": {
+        "issue": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "id",
+                "question",
+                "required",
+                "severity",
+                "kind",
+                "parent_location",
+                "status",
+                "evidence_ids",
+                "closing_reason",
+                "coverage_notes",
+                "answer_kind",
+                "delta"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "question": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "required": {
+                    "type": "boolean"
+                },
+                "severity": {
+                    "enum": ["critical", "p1", "normal"]
+                },
+                "kind": {
+                    "enum": [
+                        "missing_topic",
+                        "missed_source",
+                        "weak_evidence",
+                        "insufficient_detail",
+                        "possible_error",
+                        "outdated"
+                    ]
+                },
+                "parent_location": {
+                    "type": "string"
+                },
+                "status": {
+                    "enum": ["open", "unverified", "resolved", "deferred"]
+                },
+                "evidence_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    }
+                },
+                "closing_reason": {
+                    "type": "string"
+                },
+                "coverage_notes": {
+                    "type": "string"
+                },
+                "answer_kind": {
+                    "enum": ["supported", "unknown"]
+                },
+                "delta": {
+                    "enum": [
+                        "maintained",
+                        "qualified",
+                        "corrected",
+                        "withdrawn",
+                        "unresolved"
+                    ]
+                }
+            }
+        },
+        "actionResult": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["reason_code", "summary", "result_count"],
+            "properties": {
+                "reason_code": {
+                    "type": ["string", "null"],
+                    "pattern": "^[a-z][a-z0-9_]{1,80}$"
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "result_count": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "attempt": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "started_at", "ended_at", "reason_code"],
+            "properties": {
+                "status": {
+                    "enum": [
+                        "planned",
+                        "started",
+                        "succeeded",
+                        "empty",
+                        "failed",
+                        "interrupted"
+                    ]
+                },
+                "started_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "ended_at": {
+                    "anyOf": [
+                        {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "reason_code": {
+                    "type": ["string", "null"]
+                }
+            }
+        },
+        "action": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "id",
+                "type",
+                "issue_id",
+                "route",
+                "query",
+                "public_query_approved",
+                "status",
+                "attempts",
+                "result"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "type": {
+                    "enum": [
+                        "local-search",
+                        "local-read",
+                        "web-search",
+                        "web-fetch"
+                    ]
+                },
+                "issue_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "route": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "query": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "public_query_approved": {
+                    "type": "boolean"
+                },
+                "status": {
+                    "enum": [
+                        "planned",
+                        "started",
+                        "succeeded",
+                        "empty",
+                        "failed",
+                        "interrupted"
+                    ]
+                },
+                "attempts": {
+                    "type": "array",
+                    "maxItems": 3,
+                    "items": {
+                        "$ref": "#/$defs/attempt"
+                    }
+                },
+                "result": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/actionResult"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            }
+        },
+        "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "id",
+                "source_id",
+                "origin_id",
+                "issue_ids",
+                "relation",
+                "kind",
+                "excerpt",
+                "verified",
+                "retrieval_status",
+                "title",
+                "publisher",
+                "published_at",
+                "revised_at",
+                "effective_at",
+                "fetched_at"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^(DD|ORIG)-(L|W|DL)[0-9]+$"
+                },
+                "source_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "origin_id": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "issue_ids": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    }
+                },
+                "relation": {
+                    "enum": ["support", "contradict", "qualify"]
+                },
+                "kind": {
+                    "enum": ["local", "web"]
+                },
+                "excerpt": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "verified": {
+                    "type": "boolean"
+                },
+                "retrieval_status": {
+                    "enum": ["body", "snippet", "unavailable"]
+                },
+                "title": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "publisher": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "published_at": {
+                    "type": ["string", "null"]
+                },
+                "revised_at": {
+                    "type": ["string", "null"]
+                },
+                "effective_at": {
+                    "type": ["string", "null"]
+                },
+                "fetched_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "path": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                },
+                "line_start": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "line_end": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "modified_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "url": {
+                    "type": "string",
+                    "pattern": "^https://[^\\s]+$"
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "kind": {
+                                "const": "local"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "path",
+                            "sha256",
+                            "line_start",
+                            "line_end",
+                            "modified_at"
+                        ]
+                    },
+                    "else": {
+                        "required": ["url"]
+                    }
+                }
+            ]
+        },
+        "review": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "report_sha256",
+                "semantic_checked",
+                "citations_checked",
+                "contradictions_checked",
+                "scope_checked",
+                "major_findings",
+                "checked_issue_ids",
+                "checked_evidence_ids",
+                "notes"
+            ],
+            "properties": {
+                "report_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                },
+                "semantic_checked": {
+                    "type": "boolean"
+                },
+                "citations_checked": {
+                    "type": "boolean"
+                },
+                "contradictions_checked": {
+                    "type": "boolean"
+                },
+                "scope_checked": {
+                    "type": "boolean"
+                },
+                "major_findings": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "checked_issue_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    }
+                },
+                "checked_evidence_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    }
+                },
+                "notes": {
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "output": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256", "finalized_at", "status"],
+            "properties": {
+                "path": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                },
+                "finalized_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "status": {
+                    "enum": [
+                        "active",
+                        "partial",
+                        "complete",
+                        "cancelled",
+                        "failed"
+                    ]
+                }
+            }
+        }
+    },
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schema_version",
+        "run_id",
+        "status",
+        "revision",
+        "created_at",
+        "updated_at",
+        "parent_input",
+        "original_query",
+        "source_root",
+        "source_status",
+        "source_fingerprint",
+        "config",
+        "budget",
+        "actions",
+        "issues",
+        "evidence",
+        "routes",
+        "history",
+        "review",
+        "output",
+        "pending_output",
+        "previous_outputs",
+        "error"
+    ],
+    "properties": {
+        "schema_version": {
+            "const": "1.1"
+        },
+        "run_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        },
+        "status": {
+            "enum": ["active", "partial", "complete", "cancelled", "failed"]
+        },
+        "revision": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "created_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "updated_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "parent_input": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256"],
+            "properties": {
+                "path": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                }
+            }
+        },
+        "original_query": {
+            "type": "string",
+            "minLength": 1
+        },
+        "source_root": {
+            "type": ["string", "null"]
+        },
+        "source_status": {
+            "enum": ["available", "unavailable"]
+        },
+        "source_fingerprint": {
+            "anyOf": [
+                {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "config": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["max_minutes", "max_web_operations"],
+            "properties": {
+                "max_minutes": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "max_web_operations": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "budget": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "elapsed_seconds",
+                "web_operations",
+                "active_since",
+                "cutoff_reason",
+                "interruption_unmeasured"
+            ],
+            "properties": {
+                "elapsed_seconds": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "web_operations": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "active_since": {
+                    "anyOf": [
+                        {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "cutoff_reason": {
+                    "type": ["string", "null"]
+                },
+                "interruption_unmeasured": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "actions": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/action"
+            }
+        },
+        "issues": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/issue"
+            }
+        },
+        "evidence": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/evidence"
+            }
+        },
+        "routes": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "integer",
+                "minimum": 0
+            }
+        },
+        "history": {
+            "type": "array",
+            "items": {
+                "type": "object"
+            }
+        },
+        "review": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/review"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "output": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/output"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "pending_output": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/output"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "previous_outputs": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/output"
+            }
+        },
+        "error": {
+            "type": ["string", "null"]
+        }
+    }
+}
